@@ -17,7 +17,11 @@ const dataSource = ref('unconfigured')
 const lastUpdated = ref('')
 const celebrationActive = ref(false)
 const celebrationKey = ref(0)
+const celebrationKind = ref('lead')
+const celebrationTitle = ref('')
 const celebrationTeam = ref('')
+const celebrationDetail = ref('')
+const overtakingTeam = ref('')
 let refreshTimerId
 let celebrationTimerId
 
@@ -104,13 +108,17 @@ const confettiPieces = Array.from({ length: 72 }, (_, index) => ({
 }))
 
 watch(
-  () => topTeam.value?.name,
-  (newLeader, previousLeader) => {
-    if (!newLeader || !previousLeader || newLeader === previousLeader) {
+  () => teamTotals.value.map((team) => ({ name: team.name, minutes: team.minutes })),
+  (newStandings, previousStandings) => {
+    if (previousStandings.length === 0 || newStandings.length === 0) {
       return
     }
 
-    triggerLeadCelebration(newLeader)
+    const overtake = findOvertake(newStandings, previousStandings)
+
+    if (overtake) {
+      triggerOvertakeCelebration(overtake)
+    }
   },
 )
 
@@ -131,14 +139,71 @@ function teamRaceStyle(team, index) {
   }
 }
 
-function triggerLeadCelebration(teamName) {
-  celebrationTeam.value = teamName
+function findOvertake(newStandings, previousStandings) {
+  const newPositions = new Map(newStandings.map((team, index) => [team.name, { ...team, index }]))
+  const previousPositions = new Map(previousStandings.map((team, index) => [team.name, { ...team, index }]))
+
+  return newStandings
+    .map((team, newIndex) => {
+      const previousTeam = previousPositions.get(team.name)
+      const previousIndex = previousTeam?.index ?? previousStandings.length
+
+      if (newIndex >= previousIndex) {
+        return null
+      }
+
+      const passedTeams = previousStandings.filter((otherTeam, previousOtherIndex) => {
+        const newOtherTeam = newPositions.get(otherTeam.name)
+        return (
+          previousOtherIndex < previousIndex &&
+          newOtherTeam &&
+          newOtherTeam.index > newIndex &&
+          team.minutes > newOtherTeam.minutes
+        )
+      })
+
+      if (passedTeams.length === 0) {
+        return null
+      }
+
+      return {
+        teamName: team.name,
+        passedTeams: passedTeams.map((teamPassed) => teamPassed.name),
+        newIndex,
+        rankJump: previousIndex - newIndex,
+      }
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.passedTeams.length - a.passedTeams.length || b.rankJump - a.rankJump || a.newIndex - b.newIndex)[0]
+}
+
+function formatPassedTeams(teamNames) {
+  if (teamNames.length === 1) {
+    return teamNames[0]
+  }
+
+  if (teamNames.length === 2) {
+    return `${teamNames[0]} and ${teamNames[1]}`
+  }
+
+  return `${teamNames[0]} and ${teamNames.length - 1} others`
+}
+
+function triggerOvertakeCelebration(overtake) {
+  const tookLead = overtake.newIndex === 0
+
+  celebrationKind.value = tookLead ? 'lead' : 'move'
+  celebrationTitle.value = tookLead ? 'Took the lead' : 'Moved ahead'
+  celebrationTeam.value = overtake.teamName
+  celebrationDetail.value = `Passed ${formatPassedTeams(overtake.passedTeams)}`
+  overtakingTeam.value = overtake.teamName
   celebrationKey.value += 1
   celebrationActive.value = true
 
   window.clearTimeout(celebrationTimerId)
   celebrationTimerId = window.setTimeout(() => {
     celebrationActive.value = false
+    overtakingTeam.value = ''
   }, 5200)
 }
 
@@ -198,14 +263,17 @@ function formatLastUpdated(timestamp) {
       v-if="celebrationActive"
       :key="celebrationKey"
       class="lead-celebration"
+      :class="{ 'is-move': celebrationKind === 'move' }"
       role="status"
       aria-live="polite"
     >
       <div class="lead-celebration-card">
-        <span>New leader</span>
+        <span>{{ celebrationTitle }}</span>
         <strong>{{ celebrationTeam }}</strong>
+        <small>{{ celebrationDetail }}</small>
       </div>
       <span
+        v-if="celebrationKind === 'lead'"
         v-for="piece in confettiPieces"
         :key="piece.id"
         class="confetti-piece"
@@ -234,13 +302,14 @@ function formatLastUpdated(timestamp) {
       </div>
 
       <div class="progress-card" aria-label="Campaign progress">
-        <div class="total-minutes-hero">
-          <span>Total minutes</span>
-          <strong>{{ formatMinutes(totalMinutes) }}</strong>
+        <div class="progress-ring" :style="{ '--progress': `${percentComplete * 3.6}deg` }">
+          <div>
+            <strong>{{ percentComplete }}%</strong>
+            <span>complete</span>
+          </div>
         </div>
 
         <div class="progress-details">
-          <span>{{ percentComplete }}% complete</span>
           <div class="progress-track">
             <div class="progress-fill" :style="{ width: `${percentComplete}%` }"></div>
           </div>
@@ -284,7 +353,13 @@ function formatLastUpdated(timestamp) {
 
         <div v-if="loading" class="empty-state">Loading teams...</div>
         <div v-else class="team-list team-bar-chart">
-          <div v-for="(team, index) in teamTotals" :key="team.name" class="team-row team-bar-card" :style="teamRaceStyle(team, index)">
+          <div
+            v-for="(team, index) in teamTotals"
+            :key="team.name"
+            class="team-row team-bar-card"
+            :class="{ 'is-overtaking': overtakingTeam === team.name }"
+            :style="teamRaceStyle(team, index)"
+          >
             <div class="bar-plot" aria-hidden="true">
               <div class="bar-fill">
                 <strong class="bar-value">{{ formatMinutes(team.minutes) }}</strong>
@@ -328,7 +403,7 @@ function formatLastUpdated(timestamp) {
 
         <div v-if="loading" class="empty-state">Loading donors...</div>
         <div v-else-if="filteredDonations.length === 0" class="empty-state">No minutes logged yet.</div>
-        <div v-else class="donor-scroll" aria-label="Recent donations">
+        <div v-else class="donor-scroll" :class="{ 'is-static': filteredDonations.length <= 4 }" aria-label="Recent donations">
           <div class="donor-scroll-track" :class="{ 'is-static': filteredDonations.length <= 4 }">
             <div v-for="copy in 2" :key="copy" class="donor-list" :aria-hidden="copy === 2">
               <div

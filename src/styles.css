@@ -78,6 +78,19 @@ button:disabled {
   transform: translateX(-50%);
 }
 
+.lead-celebration.is-move .lead-celebration-card {
+  top: auto;
+  right: clamp(18px, 3vw, 36px);
+  bottom: clamp(18px, 3vw, 36px);
+  left: auto;
+  min-width: min(340px, calc(100vw - 48px));
+  padding: 14px 18px;
+  text-align: left;
+  border-left: 6px solid var(--blue);
+  animation: move-card 5200ms ease both;
+  transform: none;
+}
+
 .lead-celebration-card span {
   color: var(--green);
   font-size: 0.78rem;
@@ -89,6 +102,12 @@ button:disabled {
 .lead-celebration-card strong {
   font-size: clamp(1.8rem, 4vw, 3.5rem);
   line-height: 1;
+}
+
+.lead-celebration-card small {
+  color: var(--muted);
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-weight: 850;
 }
 
 .confetti-piece {
@@ -133,6 +152,24 @@ button:disabled {
   }
 }
 
+@keyframes move-card {
+  0% {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+
+  10%,
+  78% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+
 @keyframes confetti-fall {
   0% {
     opacity: 0;
@@ -150,14 +187,16 @@ button:disabled {
 }
 
 .campaign-panel {
+  --campaign-padding: clamp(18px, 2vw, 26px);
   position: relative;
   display: grid;
-  grid-template-columns: minmax(260px, 0.82fr) minmax(420px, 1.18fr);
+  grid-template-columns: minmax(0, 1fr) minmax(210px, 250px);
+  align-items: center;
   gap: 18px;
   flex: 0 0 clamp(190px, 27vh, 280px);
   overflow: hidden;
   min-height: 0;
-  padding: clamp(18px, 2vw, 26px);
+  padding: var(--campaign-padding);
   color: #fffdf8;
   background:
     linear-gradient(115deg, rgba(20, 107, 74, 0.95), rgba(47, 111, 159, 0.78)),
@@ -260,45 +299,58 @@ h2 {
 .progress-card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-self: center;
-  height: 100%;
-  min-height: 0;
-  padding: clamp(16px, 1.8vw, 22px);
+  justify-self: end;
+  overflow: hidden;
+  width: min(100%, 230px, calc(clamp(190px, 27vh, 280px) - (var(--campaign-padding) * 2)));
+  aspect-ratio: 1;
+  max-height: 100%;
+  gap: clamp(5px, 0.8vh, 9px);
+  padding: clamp(10px, 1.2vw, 14px);
   background: rgba(255, 253, 248, 0.14);
   border: 1px solid rgba(255, 253, 248, 0.24);
   border-radius: 8px;
   backdrop-filter: blur(18px);
 }
 
-.total-minutes-hero {
+.progress-ring {
+  display: grid;
+  place-items: center;
+  width: min(clamp(82px, 12vh, 132px), 100%);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  background:
+    radial-gradient(circle at center, rgba(23, 32, 38, 0.7) 57%, transparent 58%),
+    conic-gradient(var(--gold) var(--progress), rgba(255, 253, 248, 0.28) 0deg);
+  border-radius: 50%;
+}
+
+.progress-ring div {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  flex: 1;
-  gap: 8px;
-  text-align: center;
+  align-items: center;
+  gap: 4px;
 }
 
-.total-minutes-hero span {
-  color: rgba(255, 253, 248, 0.72);
-  font-size: 0.86rem;
-  font-weight: 900;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-.total-minutes-hero strong {
+.progress-ring strong {
   color: #fffdf8;
-  font-size: clamp(4.1rem, 8.4vw, 7rem);
-  line-height: 0.92;
-  overflow-wrap: anywhere;
+  font-size: clamp(1.65rem, 3.4vh, 2.35rem);
+  line-height: 1;
+}
+
+.progress-ring span {
+  color: rgba(255, 253, 248, 0.72);
+  font-size: clamp(0.7rem, 1.4vh, 0.82rem);
+  font-weight: 800;
 }
 
 .progress-details {
   display: grid;
-  gap: 10px;
+  gap: 6px;
+  padding-bottom: 0;
   color: rgba(255, 253, 248, 0.86);
+  font-size: clamp(0.72rem, 1.45vh, 0.86rem);
   font-weight: 800;
 }
 
@@ -311,7 +363,7 @@ h2 {
 }
 
 .progress-track {
-  height: 12px;
+  height: 8px;
 }
 
 .progress-fill,
@@ -536,6 +588,18 @@ h2 {
   box-shadow: inset -8px 0 14px rgba(23, 32, 38, 0.08);
 }
 
+.team-bar-card.is-overtaking .bar-fill {
+  animation: takeover-bar 5200ms ease both;
+}
+
+.team-bar-card.is-overtaking .bar-label strong {
+  color: var(--team-accent);
+}
+
+.team-bar-card.is-overtaking .bar-label {
+  animation: takeover-label 5200ms ease both;
+}
+
 .bar-value {
   margin-top: 8px;
   padding: 4px 7px;
@@ -653,6 +717,11 @@ h2 {
   mask-image: linear-gradient(180deg, transparent, #000 7%, #000 93%, transparent);
 }
 
+.donor-scroll.is-static {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
 .donor-scroll-track {
   display: grid;
   gap: 12px;
@@ -722,6 +791,35 @@ h2 {
 
   to {
     transform: translateY(-50%);
+  }
+}
+
+@keyframes takeover-bar {
+  0%,
+  100% {
+    box-shadow: inset -8px 0 14px rgba(23, 32, 38, 0.08);
+    filter: none;
+  }
+
+  12%,
+  56% {
+    box-shadow:
+      0 0 0 5px color-mix(in srgb, var(--team-accent) 20%, transparent),
+      0 0 34px color-mix(in srgb, var(--team-accent) 45%, transparent),
+      inset -8px 0 14px rgba(23, 32, 38, 0.08);
+    filter: saturate(1.16);
+  }
+}
+
+@keyframes takeover-label {
+  0%,
+  100% {
+    background: transparent;
+  }
+
+  12%,
+  56% {
+    background: color-mix(in srgb, var(--team-accent) 10%, transparent);
   }
 }
 
@@ -803,8 +901,9 @@ h2 {
     padding: 18px;
   }
 
-  .total-minutes-hero {
-    min-height: 170px;
+  .progress-ring {
+    width: min(176px, 100%);
+    margin-bottom: 8px;
   }
 
   .stats-grid {
