@@ -25,6 +25,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  overflow: hidden;
 }
 
 button,
@@ -41,19 +42,25 @@ button:disabled {
 }
 
 .app-shell {
-  width: min(1180px, calc(100% - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(1280px, calc(100% - 24px));
+  height: 100vh;
   margin: 0 auto;
-  padding: 32px 0;
+  overflow: hidden;
+  padding: 12px 0;
 }
 
 .campaign-panel {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
-  gap: 24px;
+  grid-template-columns: minmax(260px, 0.82fr) minmax(420px, 1.18fr);
+  gap: 18px;
+  flex: 0 0 clamp(190px, 27vh, 280px);
   overflow: hidden;
-  min-height: 360px;
-  padding: 32px;
+  min-height: 0;
+  padding: clamp(18px, 2vw, 26px);
   color: #fffdf8;
   background:
     linear-gradient(115deg, rgba(20, 107, 74, 0.95), rgba(47, 111, 159, 0.78)),
@@ -100,8 +107,8 @@ p {
 }
 
 h1 {
-  margin-bottom: 16px;
-  font-size: clamp(2.8rem, 8vw, 5.8rem);
+  margin-bottom: 10px;
+  font-size: clamp(2.4rem, 6vw, 5rem);
   line-height: 0.95;
   letter-spacing: 0;
 }
@@ -115,9 +122,9 @@ h2 {
 
 .campaign-summary {
   max-width: 520px;
-  margin-bottom: 28px;
+  margin-bottom: 18px;
   color: rgba(255, 253, 248, 0.86);
-  font-size: 1.15rem;
+  font-size: clamp(0.98rem, 1.3vw, 1.12rem);
   line-height: 1.5;
 }
 
@@ -156,43 +163,39 @@ h2 {
 .progress-card {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-self: center;
-  min-height: 288px;
-  padding: 24px;
+  height: 100%;
+  min-height: 0;
+  padding: clamp(16px, 1.8vw, 22px);
   background: rgba(255, 253, 248, 0.14);
   border: 1px solid rgba(255, 253, 248, 0.24);
   border-radius: 8px;
   backdrop-filter: blur(18px);
 }
 
-.progress-ring {
-  display: grid;
-  place-items: center;
-  width: min(220px, 100%);
-  aspect-ratio: 1;
-  margin: 0 auto 24px;
-  background:
-    radial-gradient(circle at center, rgba(23, 32, 38, 0.7) 57%, transparent 58%),
-    conic-gradient(var(--gold) var(--progress), rgba(255, 253, 248, 0.28) 0deg);
-  border-radius: 50%;
-}
-
-.progress-ring div {
+.total-minutes-hero {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  justify-content: center;
+  flex: 1;
+  gap: 8px;
+  text-align: center;
 }
 
-.progress-ring strong {
-  font-size: 3rem;
-  line-height: 1;
-}
-
-.progress-ring span {
+.total-minutes-hero span {
   color: rgba(255, 253, 248, 0.72);
-  font-weight: 700;
+  font-size: 0.86rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.total-minutes-hero strong {
+  color: #fffdf8;
+  font-size: clamp(4.1rem, 8.4vw, 7rem);
+  line-height: 0.92;
+  overflow-wrap: anywhere;
 }
 
 .progress-details {
@@ -224,8 +227,9 @@ h2 {
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-  margin: 18px 0;
+  flex: 0 0 auto;
+  gap: 10px;
+  margin: 0;
 }
 
 .stat-box,
@@ -236,13 +240,13 @@ h2 {
 }
 
 .stat-box {
-  min-height: 114px;
-  padding: 18px;
+  min-height: 74px;
+  padding: 11px 14px;
 }
 
 .stat-box span {
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 7px;
   color: var(--muted);
   font-size: 0.88rem;
   font-weight: 800;
@@ -252,13 +256,14 @@ h2 {
   display: block;
   overflow-wrap: anywhere;
   color: var(--ink);
-  font-size: clamp(1.5rem, 3vw, 2.35rem);
+  font-size: clamp(1.3rem, 2.4vw, 2.05rem);
   line-height: 1.08;
 }
 
 .notice {
-  margin: 0 0 18px;
-  padding: 12px 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 8px 12px;
   color: #5f3f02;
   background: #fff4d6;
   border: 1px solid #efd28c;
@@ -272,13 +277,16 @@ h2 {
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: minmax(320px, 0.78fr) minmax(0, 1.22fr);
-  gap: 18px;
+  grid-template-columns: 1fr;
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 0;
 }
 
 .panel {
   min-width: 0;
-  padding: 22px;
+  min-height: 0;
+  padding: 14px;
 }
 
 .panel-heading {
@@ -286,7 +294,7 @@ h2 {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .panel .eyebrow {
@@ -297,6 +305,16 @@ h2 {
 .donor-list {
   display: grid;
   gap: 12px;
+}
+
+.team-chart-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.team-chart-panel .panel-heading {
+  flex: 0 0 auto;
 }
 
 .team-row,
@@ -313,6 +331,27 @@ h2 {
   grid-template-columns: 38px minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
+}
+
+.team-bar-chart {
+  flex: 1 1 auto;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  align-items: stretch;
+  min-height: 0;
+  gap: clamp(14px, 1.6vw, 24px);
+}
+
+.team-bar-card {
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-items: stretch;
+  gap: clamp(9px, 1.1vh, 14px);
+  min-height: 0;
+  padding: 0;
+  text-align: center;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
 }
 
 .team-rank {
@@ -354,8 +393,61 @@ h2 {
   white-space: nowrap;
 }
 
+.bar-plot {
+  position: relative;
+  align-self: stretch;
+  justify-self: center;
+  width: min(64%, 124px);
+  min-height: 0;
+  border-bottom: 4px solid #70776f;
+}
+
+.bar-fill {
+  position: absolute;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  inset: auto 0 0;
+  height: var(--team-height);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 34%),
+    var(--team-accent);
+  border-radius: 8px 8px 0 0;
+  box-shadow:
+    0 -10px 22px color-mix(in srgb, var(--team-accent) 22%, transparent),
+    inset -8px 0 18px rgba(23, 32, 38, 0.11);
+}
+
+.bar-value {
+  margin-top: clamp(8px, 1vh, 12px);
+  color: #fffdf8;
+  font-size: clamp(1.15rem, 2.3vh, 1.65rem);
+  line-height: 1;
+  text-shadow: 0 2px 8px rgba(23, 32, 38, 0.32);
+  white-space: nowrap;
+}
+
+.bar-label {
+  min-height: clamp(58px, 7.5vh, 80px);
+  padding-top: clamp(9px, 1vh, 12px);
+  border-top: 4px solid #70776f;
+}
+
+.bar-label strong {
+  font-size: clamp(1.04rem, 2.1vh, 1.35rem);
+  line-height: 1.12;
+}
+
+.bar-label span {
+  font-size: clamp(0.82rem, 1.55vh, 0.95rem);
+}
+
 .donor-heading {
   align-items: flex-end;
+}
+
+.donor-panel {
+  display: none;
 }
 
 .team-filter {
@@ -463,8 +555,15 @@ h2 {
 }
 
 @media (max-width: 880px) {
+  body {
+    overflow: visible;
+  }
+
   .app-shell {
     width: min(100% - 24px, 680px);
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
     padding: 18px 0;
   }
 
@@ -474,7 +573,16 @@ h2 {
   }
 
   .campaign-panel {
+    flex-basis: auto;
     padding: 24px;
+  }
+
+  .team-bar-chart {
+    grid-template-columns: 1fr;
+  }
+
+  .donor-panel {
+    display: block;
   }
 
   .stats-grid {
@@ -501,8 +609,8 @@ h2 {
     padding: 18px;
   }
 
-  .progress-ring {
-    width: min(176px, 100%);
+  .total-minutes-hero {
+    min-height: 170px;
   }
 
   .stats-grid {

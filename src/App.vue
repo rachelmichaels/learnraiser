@@ -70,6 +70,7 @@ const teamTotals = computed(() => {
   return [...totals.values()].sort((a, b) => b.minutes - a.minutes)
 })
 
+const maxTeamMinutes = computed(() => Math.max(1, ...teamTotals.value.map((team) => team.minutes)))
 const teamOptions = computed(() => ['All teams', ...teamTotals.value.map((team) => team.name)])
 
 const filteredDonations = computed(() => {
@@ -83,6 +84,7 @@ const filteredDonations = computed(() => {
 })
 
 const topTeam = computed(() => teamTotals.value[0])
+const teamAccentColors = ['#e86f51', '#efb84f', '#2f6f9f', '#146b4a', '#7f5ab6']
 
 function displayName(donation) {
   return donation.showName ? donation.name : 'Anonymous'
@@ -90,6 +92,15 @@ function displayName(donation) {
 
 function formatMinutes(minutes) {
   return new Intl.NumberFormat('en-US').format(minutes)
+}
+
+function teamRaceStyle(team, index) {
+  const height = Math.max(8, Math.round((team.minutes / maxTeamMinutes.value) * 100))
+
+  return {
+    '--team-height': `${height}%`,
+    '--team-accent': teamAccentColors[index % teamAccentColors.length],
+  }
 }
 
 function formatTimestamp(timestamp) {
@@ -164,15 +175,13 @@ function formatLastUpdated(timestamp) {
       </div>
 
       <div class="progress-card" aria-label="Campaign progress">
-        <div class="progress-ring" :style="{ '--progress': `${percentComplete * 3.6}deg` }">
-          <div>
-            <strong>{{ percentComplete }}%</strong>
-            <span>complete</span>
-          </div>
+        <div class="total-minutes-hero">
+          <span>Total minutes</span>
+          <strong>{{ formatMinutes(totalMinutes) }}</strong>
         </div>
 
         <div class="progress-details">
-          <span>{{ formatMinutes(totalMinutes) }} minutes raised</span>
+          <span>{{ percentComplete }}% complete</span>
           <div class="progress-track">
             <div class="progress-fill" :style="{ width: `${percentComplete}%` }"></div>
           </div>
@@ -206,7 +215,7 @@ function formatLastUpdated(timestamp) {
     </p>
 
     <section class="dashboard-grid">
-      <article class="panel">
+      <article class="panel team-chart-panel">
         <div class="panel-heading">
           <div>
             <p class="eyebrow">Leaderboard</p>
@@ -215,22 +224,18 @@ function formatLastUpdated(timestamp) {
         </div>
 
         <div v-if="loading" class="empty-state">Loading teams...</div>
-        <div v-else class="team-list">
-          <div v-for="(team, index) in teamTotals" :key="team.name" class="team-row">
-            <div class="team-rank">
-              <span>{{ index + 1 }}</span>
-            </div>
-            <div class="team-info">
-              <strong>{{ team.name }}</strong>
-              <span>{{ team.donors }} donors</span>
-              <div class="mini-track">
-                <div
-                  class="mini-fill"
-                  :style="{ width: `${Math.min(100, (team.minutes / Math.max(totalMinutes, 1)) * 100)}%` }"
-                ></div>
+        <div v-else class="team-list team-bar-chart">
+          <div v-for="(team, index) in teamTotals" :key="team.name" class="team-row team-bar-card" :style="teamRaceStyle(team, index)">
+            <div class="bar-plot" aria-hidden="true">
+              <div class="bar-fill">
+                <strong class="bar-value">{{ formatMinutes(team.minutes) }}</strong>
               </div>
             </div>
-            <strong class="team-minutes">{{ formatMinutes(team.minutes) }}</strong>
+
+            <div class="team-info bar-label">
+              <strong>{{ team.name }}</strong>
+              <span>{{ team.donors }} donors</span>
+            </div>
           </div>
         </div>
       </article>
