@@ -2,11 +2,11 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { getDonations } from './services/donations'
 
-const campaignName = import.meta.env.VITE_CAMPAIGN_NAME || 'Learnraiser'
-const campaignGoal = Number(import.meta.env.VITE_CAMPAIGN_GOAL || 10000)
-const campaignEndDate = import.meta.env.VITE_CAMPAIGN_END_DATE || ''
+const campaignName = 'Learnraiser'
+const campaignGoal = 10000
+const campaignEndDate = '2026-06-30'
 const googleFormUrl = import.meta.env.VITE_GOOGLE_FORM_URL || ''
-const refreshSeconds = Math.max(10, Number(import.meta.env.VITE_REFRESH_SECONDS || 30))
+const refreshSeconds = 30
 
 const donations = ref([])
 const selectedTeam = ref('All teams')
@@ -201,9 +201,6 @@ function formatLastUpdated(timestamp) {
     </section>
 
     <p v-if="error" class="notice">{{ error }}</p>
-    <p v-else-if="dataSource === 'sample'" class="notice">
-      Sample data is showing. Add <code>VITE_MINUTES_API_URL</code> to show Google Form responses.
-    </p>
     <p v-else-if="dataSource === 'unconfigured'" class="notice">
       No response feed is connected yet. Add your Apps Script <code>/exec</code> URL to show Google Form responses.
     </p>

@@ -1,8 +1,5 @@
-import { sampleDonations } from '../data/sampleDonations'
-
 const apiUrl = import.meta.env.VITE_MINUTES_API_URL
 const sheetCsvUrl = import.meta.env.VITE_GOOGLE_SHEET_CSV_URL
-const useSampleData = import.meta.env.VITE_USE_SAMPLE_DATA === 'true'
 
 export async function getDonations() {
   if (apiUrl) {
@@ -13,15 +10,10 @@ export async function getDonations() {
     return getCsvDonations(sheetCsvUrl)
   }
 
-  return useSampleData
-    ? {
-        donations: sampleDonations,
-        source: 'sample',
-      }
-    : {
-        donations: [],
-        source: 'unconfigured',
-      }
+  return {
+    donations: [],
+    source: 'unconfigured',
+  }
 }
 
 async function getJsonDonations(url) {

@@ -14,17 +14,14 @@ npm run dev
 Copy `.env.example` to `.env` and update the values:
 
 ```sh
-VITE_CAMPAIGN_NAME="Learnraiser"
-VITE_CAMPAIGN_GOAL=10000
-VITE_CAMPAIGN_END_DATE="2026-06-30"
 VITE_GOOGLE_FORM_URL="https://forms.gle/your-form"
 VITE_MINUTES_API_URL="https://script.google.com/macros/s/your-script-id/exec"
 VITE_GOOGLE_SHEET_CSV_URL=""
-VITE_USE_SAMPLE_DATA=false
-VITE_REFRESH_SECONDS=30
 ```
 
-If `VITE_MINUTES_API_URL` and `VITE_GOOGLE_SHEET_CSV_URL` are empty, the dashboard shows no donors yet. Set `VITE_USE_SAMPLE_DATA=true` only when you want local placeholder data.
+Only the Google Form, Apps Script API, and optional published CSV URLs are environment variables. The campaign name, goal, end date, and refresh interval live near the top of `src/App.vue`.
+
+If `VITE_MINUTES_API_URL` and `VITE_GOOGLE_SHEET_CSV_URL` are empty, the dashboard shows no donors yet.
 
 ## Google Form Fields
 
@@ -75,7 +72,7 @@ The script supports normal JSON and JSONP. The Vue app tries normal JSON first, 
 
 ## Auto Updates
 
-The dashboard refreshes the response feed every `VITE_REFRESH_SECONDS` seconds. The default is 30 seconds. Each refresh adds a cache-busting query parameter so newly submitted Google Form responses can appear without reloading the page.
+The dashboard refreshes the response feed every 30 seconds. Each refresh adds a cache-busting query parameter so newly submitted Google Form responses can appear without reloading the page.
 
 ## Published CSV Alternative
 
@@ -90,4 +87,4 @@ This app works well on Vercel, Netlify, or Cloudflare Pages.
 - Build command: `npm run build`
 - Output directory: `dist`
 
-Set the same environment variables in your hosting provider before deploying.
+Set the three URL environment variables in your hosting provider before deploying.
