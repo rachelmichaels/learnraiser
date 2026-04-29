@@ -1,0 +1,548 @@
+:root {
+  color: #172026;
+  background: #f4f1ea;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --ink: #172026;
+  --muted: #697177;
+  --paper: #fffdf8;
+  --line: #ded8cc;
+  --green: #146b4a;
+  --green-soft: #dbeee5;
+  --blue: #2f6f9f;
+  --coral: #e86f51;
+  --gold: #efb84f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.app-shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+.campaign-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+  gap: 24px;
+  overflow: hidden;
+  min-height: 360px;
+  padding: 32px;
+  color: #fffdf8;
+  background:
+    linear-gradient(115deg, rgba(20, 107, 74, 0.95), rgba(47, 111, 159, 0.78)),
+    url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80");
+  background-position: center;
+  background-size: cover;
+  border-radius: 8px;
+}
+
+.campaign-panel::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 8px;
+  content: "";
+  background: linear-gradient(90deg, var(--gold), var(--coral), var(--green-soft));
+}
+
+.campaign-copy,
+.progress-card {
+  position: relative;
+  z-index: 1;
+}
+
+.campaign-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 640px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: inherit;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 16px;
+  font-size: clamp(2.8rem, 8vw, 5.8rem);
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: 1.7rem;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+.campaign-summary {
+  max-width: 520px;
+  margin-bottom: 28px;
+  color: rgba(255, 253, 248, 0.86);
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+.campaign-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.primary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 20px;
+  color: #172026;
+  background: #fffdf8;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 6px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.disabled-action {
+  color: rgba(23, 32, 38, 0.52);
+  cursor: not-allowed;
+}
+
+.deadline {
+  color: rgba(255, 253, 248, 0.8);
+  font-weight: 700;
+}
+
+.progress-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+  min-height: 288px;
+  padding: 24px;
+  background: rgba(255, 253, 248, 0.14);
+  border: 1px solid rgba(255, 253, 248, 0.24);
+  border-radius: 8px;
+  backdrop-filter: blur(18px);
+}
+
+.progress-ring {
+  display: grid;
+  place-items: center;
+  width: min(220px, 100%);
+  aspect-ratio: 1;
+  margin: 0 auto 24px;
+  background:
+    radial-gradient(circle at center, rgba(23, 32, 38, 0.7) 57%, transparent 58%),
+    conic-gradient(var(--gold) var(--progress), rgba(255, 253, 248, 0.28) 0deg);
+  border-radius: 50%;
+}
+
+.progress-ring div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.progress-ring strong {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.progress-ring span {
+  color: rgba(255, 253, 248, 0.72);
+  font-weight: 700;
+}
+
+.progress-details {
+  display: grid;
+  gap: 10px;
+  color: rgba(255, 253, 248, 0.86);
+  font-weight: 800;
+}
+
+.progress-track,
+.mini-track {
+  overflow: hidden;
+  width: 100%;
+  background: rgba(255, 253, 248, 0.32);
+  border-radius: 999px;
+}
+
+.progress-track {
+  height: 12px;
+}
+
+.progress-fill,
+.mini-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--coral));
+  border-radius: inherit;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.stat-box,
+.panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.stat-box {
+  min-height: 114px;
+  padding: 18px;
+}
+
+.stat-box span {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.stat-box strong {
+  display: block;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font-size: clamp(1.5rem, 3vw, 2.35rem);
+  line-height: 1.08;
+}
+
+.notice {
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  color: #5f3f02;
+  background: #fff4d6;
+  border: 1px solid #efd28c;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.notice code {
+  font-size: 0.92em;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.78fr) minmax(0, 1.22fr);
+  gap: 18px;
+}
+
+.panel {
+  min-width: 0;
+  padding: 22px;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.panel .eyebrow {
+  color: var(--green);
+}
+
+.team-list,
+.donor-list {
+  display: grid;
+  gap: 12px;
+}
+
+.team-row,
+.donor-row {
+  display: grid;
+  min-width: 0;
+  padding: 14px;
+  background: #f7f3eb;
+  border: 1px solid #e6dfd2;
+  border-radius: 7px;
+}
+
+.team-row {
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.team-rank {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  color: #fffdf8;
+  background: var(--blue);
+  border-radius: 50%;
+  font-weight: 900;
+}
+
+.team-info {
+  min-width: 0;
+}
+
+.team-info strong,
+.donor-line strong {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.team-info span,
+.donor-meta,
+.empty-state {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.mini-track {
+  height: 8px;
+  margin-top: 9px;
+  background: #e0d7c8;
+}
+
+.team-minutes {
+  white-space: nowrap;
+}
+
+.donor-heading {
+  align-items: flex-end;
+}
+
+.team-filter {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.team-filter select {
+  width: 190px;
+  min-height: 40px;
+  padding: 0 12px;
+  color: var(--ink);
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.refresh-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -4px 0 16px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.refresh-button {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0 12px;
+  color: #fffdf8;
+  background: var(--green);
+  border: 1px solid var(--green);
+  border-radius: 6px;
+  font-weight: 800;
+}
+
+.refresh-button:disabled {
+  opacity: 0.7;
+}
+
+.donor-row {
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  color: #fffdf8;
+  background: var(--green);
+  border-radius: 50%;
+  font-weight: 900;
+}
+
+.donor-copy {
+  min-width: 0;
+}
+
+.donor-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.donor-line span {
+  flex: 0 0 auto;
+  color: var(--green);
+  font-weight: 900;
+}
+
+.donor-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.donor-meta span + span::before {
+  margin-right: 8px;
+  color: #a8a096;
+  content: "/";
+}
+
+.donor-copy p {
+  margin: 10px 0 0;
+  color: #3f474d;
+  line-height: 1.45;
+}
+
+.empty-state {
+  padding: 24px;
+  text-align: center;
+  background: #f7f3eb;
+  border: 1px dashed #d8cfbf;
+  border-radius: 7px;
+}
+
+@media (max-width: 880px) {
+  .app-shell {
+    width: min(100% - 24px, 680px);
+    padding: 18px 0;
+  }
+
+  .campaign-panel,
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .campaign-panel {
+    padding: 24px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .campaign-panel {
+    min-height: auto;
+    padding: 22px 18px 28px;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 15vw, 4.2rem);
+  }
+
+  .campaign-summary {
+    font-size: 1rem;
+  }
+
+  .progress-card {
+    min-height: auto;
+    padding: 18px;
+  }
+
+  .progress-ring {
+    width: min(176px, 100%);
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    padding: 16px;
+  }
+
+  .donor-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .team-filter select {
+    width: 100%;
+  }
+
+  .refresh-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .refresh-button {
+    width: 100%;
+  }
+
+  .team-row {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+
+  .team-minutes {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .donor-line {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px;
+  }
+}
