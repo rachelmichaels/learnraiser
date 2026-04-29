@@ -84,7 +84,7 @@ const filteredDonations = computed(() => {
 })
 
 const topTeam = computed(() => teamTotals.value[0])
-const teamAccentColors = ['#e86f51', '#efb84f', '#2f6f9f', '#146b4a', '#7f5ab6']
+const teamAccentColors = ['#1f7a5c', '#2f6f9f', '#c7922b', '#d76745', '#7a5aa6']
 
 function displayName(donation) {
   return donation.showName ? donation.name : 'Anonymous'
@@ -244,7 +244,7 @@ function formatLastUpdated(timestamp) {
         <div class="panel-heading donor-heading">
           <div>
             <p class="eyebrow">Recent gifts</p>
-            <h2>Donors</h2>
+            <h2>Donations</h2>
           </div>
 
           <label class="team-filter">
@@ -269,19 +269,27 @@ function formatLastUpdated(timestamp) {
 
         <div v-if="loading" class="empty-state">Loading donors...</div>
         <div v-else-if="filteredDonations.length === 0" class="empty-state">No minutes logged yet.</div>
-        <div v-else class="donor-list">
-          <div v-for="donation in filteredDonations" :key="`${donation.timestamp}-${donation.name}-${donation.minutes}`" class="donor-row">
-            <div class="avatar" aria-hidden="true">{{ displayName(donation).charAt(0).toUpperCase() }}</div>
-            <div class="donor-copy">
-              <div class="donor-line">
-                <strong>{{ displayName(donation) }}</strong>
-                <span>{{ formatMinutes(donation.minutes) }} min</span>
+        <div v-else class="donor-scroll" aria-label="Recent donations">
+          <div class="donor-scroll-track" :class="{ 'is-static': filteredDonations.length <= 4 }">
+            <div v-for="copy in 2" :key="copy" class="donor-list" :aria-hidden="copy === 2">
+              <div
+                v-for="donation in filteredDonations"
+                :key="`${copy}-${donation.timestamp}-${donation.name}-${donation.minutes}`"
+                class="donor-row"
+              >
+                <div class="avatar" aria-hidden="true">{{ displayName(donation).charAt(0).toUpperCase() }}</div>
+                <div class="donor-copy">
+                  <div class="donor-line">
+                    <strong>{{ displayName(donation) }}</strong>
+                    <span>{{ formatMinutes(donation.minutes) }} min</span>
+                  </div>
+                  <div class="donor-meta">
+                    <span>{{ donation.team }}</span>
+                    <span>{{ formatTimestamp(donation.timestamp) }}</span>
+                  </div>
+                  <p v-if="donation.message">{{ donation.message }}</p>
+                </div>
               </div>
-              <div class="donor-meta">
-                <span>{{ donation.team }}</span>
-                <span>{{ formatTimestamp(donation.timestamp) }}</span>
-              </div>
-              <p v-if="donation.message">{{ donation.message }}</p>
             </div>
           </div>
         </div>
