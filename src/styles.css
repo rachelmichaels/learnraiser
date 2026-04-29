@@ -187,10 +187,11 @@ button:disabled {
 }
 
 .campaign-panel {
-  --campaign-padding: clamp(18px, 2vw, 26px);
+  --campaign-padding: clamp(14px, 1.8vw, 22px);
+  --campaign-tile-size: min(230px, calc(clamp(190px, 27vh, 280px) - (var(--campaign-padding) * 2)));
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(210px, 250px);
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 18px;
   flex: 0 0 clamp(190px, 27vh, 280px);
@@ -199,23 +200,25 @@ button:disabled {
   padding: var(--campaign-padding);
   color: #fffdf8;
   background:
-    linear-gradient(115deg, rgba(20, 107, 74, 0.95), rgba(47, 111, 159, 0.78)),
-    url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80");
-  background-position: center;
+    linear-gradient(115deg, rgba(20, 107, 74, 0.98), rgba(47, 111, 159, 0.92)),
+    url("https://denverkollel.org/wp-content/uploads/2021/12/home-header-2.jpg");
+  background-position: bottom center;
   background-size: cover;
+  background-blend-mode: normal, soft-light;
   border-radius: 8px;
 }
 
 .campaign-panel::after {
   position: absolute;
   inset: auto 0 0;
+  z-index: 0;
   height: 8px;
   content: "";
   background: linear-gradient(90deg, var(--gold), var(--coral), var(--green-soft));
 }
 
 .campaign-copy,
-.progress-card {
+.campaign-side {
   position: relative;
   z-index: 1;
 }
@@ -224,7 +227,46 @@ button:disabled {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 640px;
+  width: 100%;
+  max-width: 760px;
+}
+
+.campaign-side {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  gap: clamp(10px, 1.2vw, 16px);
+  max-height: 100%;
+}
+
+.brand-lockup {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: var(--campaign-tile-size);
+  aspect-ratio: 1;
+  max-height: 100%;
+  padding: clamp(14px, 1.4vw, 22px);
+  background: rgba(255, 253, 248, 0.97);
+  border: 1px solid rgba(255, 253, 248, 0.76);
+  border-radius: 6px;
+  box-shadow: 0 14px 30px rgba(10, 39, 30, 0.2);
+}
+
+.campaign-logo {
+  display: block;
+  width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  justify-self: center;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  mix-blend-mode: normal;
+  opacity: 1;
 }
 
 .eyebrow {
@@ -243,9 +285,9 @@ p {
 }
 
 h1 {
-  margin-bottom: 10px;
-  font-size: clamp(2.4rem, 6vw, 5rem);
-  line-height: 0.95;
+  margin-bottom: 6px;
+  font-size: clamp(3rem, 8vh, 4.35rem);
+  line-height: 0.9;
   letter-spacing: 0;
 }
 
@@ -258,10 +300,10 @@ h2 {
 
 .campaign-summary {
   max-width: 520px;
-  margin-bottom: 18px;
+  margin-bottom: 10px;
   color: rgba(255, 253, 248, 0.86);
-  font-size: clamp(0.98rem, 1.3vw, 1.12rem);
-  line-height: 1.5;
+  font-size: 0.98rem;
+  line-height: 1.35;
 }
 
 .campaign-actions {
@@ -275,8 +317,8 @@ h2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 48px;
-  padding: 0 20px;
+  min-height: 40px;
+  padding: 0 18px;
   color: #172026;
   background: #fffdf8;
   border: 1px solid rgba(255, 255, 255, 0.7);
@@ -301,9 +343,8 @@ h2 {
   flex-direction: column;
   justify-content: center;
   align-self: center;
-  justify-self: end;
   overflow: hidden;
-  width: min(100%, 230px, calc(clamp(190px, 27vh, 280px) - (var(--campaign-padding) * 2)));
+  width: var(--campaign-tile-size);
   aspect-ratio: 1;
   max-height: 100%;
   gap: clamp(5px, 0.8vh, 9px);
@@ -854,6 +895,21 @@ h2 {
     padding: 24px;
   }
 
+  .campaign-side {
+    justify-self: start;
+    flex-wrap: wrap;
+  }
+
+  .brand-lockup {
+    width: min(var(--campaign-tile-size), 100%);
+  }
+
+  .campaign-logo {
+    width: 100%;
+    max-height: 100%;
+    margin: 0;
+  }
+
   .team-bar-chart {
     grid-template-columns: 1fr;
   }
@@ -886,6 +942,10 @@ h2 {
   .campaign-panel {
     min-height: auto;
     padding: 22px 18px 28px;
+  }
+
+  .campaign-logo {
+    max-height: 100%;
   }
 
   h1 {

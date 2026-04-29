@@ -5,6 +5,7 @@ import { getDonations } from './services/donations'
 const campaignName = 'Learnraiser'
 const campaignGoal = 10000
 const campaignEndDate = '2026-06-30'
+const denverKollelLogoUrl = 'https://denverkollel.org/wp-content/uploads/2021/06/header_logo.png'
 const googleFormUrl = import.meta.env.VITE_GOOGLE_FORM_URL || ''
 const refreshSeconds = 30
 
@@ -301,19 +302,25 @@ function formatLastUpdated(timestamp) {
         </div>
       </div>
 
-      <div class="progress-card" aria-label="Campaign progress">
-        <div class="progress-ring" :style="{ '--progress': `${percentComplete * 3.6}deg` }">
-          <div>
-            <strong>{{ percentComplete }}%</strong>
-            <span>complete</span>
-          </div>
+      <div class="campaign-side">
+        <div class="brand-lockup" aria-label="Denver Kollel">
+          <img class="campaign-logo" :src="denverKollelLogoUrl" alt="Denver Kollel" />
         </div>
 
-        <div class="progress-details">
-          <div class="progress-track">
-            <div class="progress-fill" :style="{ width: `${percentComplete}%` }"></div>
+        <div class="progress-card" aria-label="Campaign progress">
+          <div class="progress-ring" :style="{ '--progress': `${percentComplete * 3.6}deg` }">
+            <div>
+              <strong>{{ percentComplete }}%</strong>
+              <span>complete</span>
+            </div>
           </div>
-          <span>{{ formatMinutes(remainingMinutes) }} minutes to go</span>
+
+          <div class="progress-details">
+            <div class="progress-track">
+              <div class="progress-fill" :style="{ width: `${percentComplete}%` }"></div>
+            </div>
+            <span>{{ formatMinutes(remainingMinutes) }} minutes to go</span>
+          </div>
         </div>
       </div>
     </section>
