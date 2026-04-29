@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { getDonations } from './services/donations'
 
 const campaignName = 'Learnraiser'
@@ -15,7 +15,11 @@ const refreshing = ref(false)
 const error = ref('')
 const dataSource = ref('unconfigured')
 const lastUpdated = ref('')
+const celebrationActive = ref(false)
+const celebrationKey = ref(0)
+const celebrationTeam = ref('')
 let refreshTimerId
+let celebrationTimerId
 
 onMounted(async () => {
   await loadDonations({ initial: true })
@@ -24,6 +28,7 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   window.clearInterval(refreshTimerId)
+  window.clearTimeout(celebrationTimerId)
 })
 
 async function loadDonations({ initial = false } = {}) {
@@ -85,6 +90,29 @@ const filteredDonations = computed(() => {
 
 const topTeam = computed(() => teamTotals.value[0])
 const teamAccentColors = ['#1f7a5c', '#2f6f9f', '#c7922b', '#d76745', '#7a5aa6']
+const confettiColors = ['#0f766e', '#2563eb', '#0891b2', '#16a34a', '#f59e0b', '#dc2626']
+const confettiPieces = Array.from({ length: 72 }, (_, index) => ({
+  id: index,
+  style: {
+    '--confetti-x': `${(index * 37) % 100}%`,
+    '--confetti-delay': `${(index % 18) * 72}ms`,
+    '--confetti-duration': `${2600 + (index % 7) * 180}ms`,
+    '--confetti-drift': `${((index % 9) - 4) * 18}px`,
+    '--confetti-rotate': `${(index * 53) % 360}deg`,
+    '--confetti-color': confettiColors[index % confettiColors.length],
+  },
+}))
+
+watch(
+  () => topTeam.value?.name,
+  (newLeader, previousLeader) => {
+    if (!newLeader || !previousLeader || newLeader === previousLeader) {
+      return
+    }
+
+    triggerLeadCelebration(newLeader)
+  },
+)
 
 function displayName(donation) {
   return donation.showName ? donation.name : 'Anonymous'
@@ -101,6 +129,17 @@ function teamRaceStyle(team, index) {
     '--team-height': `${height}%`,
     '--team-accent': teamAccentColors[index % teamAccentColors.length],
   }
+}
+
+function triggerLeadCelebration(teamName) {
+  celebrationTeam.value = teamName
+  celebrationKey.value += 1
+  celebrationActive.value = true
+
+  window.clearTimeout(celebrationTimerId)
+  celebrationTimerId = window.setTimeout(() => {
+    celebrationActive.value = false
+  }, 5200)
 }
 
 function formatTimestamp(timestamp) {
@@ -155,6 +194,26 @@ function formatLastUpdated(timestamp) {
 
 <template>
   <main class="app-shell">
+    <div
+      v-if="celebrationActive"
+      :key="celebrationKey"
+      class="lead-celebration"
+      role="status"
+      aria-live="polite"
+    >
+      <div class="lead-celebration-card">
+        <span>New leader</span>
+        <strong>{{ celebrationTeam }}</strong>
+      </div>
+      <span
+        v-for="piece in confettiPieces"
+        :key="piece.id"
+        class="confetti-piece"
+        :style="piece.style"
+        aria-hidden="true"
+      ></span>
+    </div>
+
     <section class="campaign-panel">
       <div class="campaign-copy">
         <p class="eyebrow">Minutes campaign</p>
